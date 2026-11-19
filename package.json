@@ -1,0 +1,14 @@
+
+{
+  "name": "daily-planner",
+  "version": "1.0.0",
+  "description": "Minimalist dark daily planner web application",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "devDependencies": {
+    "parcel": "^2.15.4",
+    "sass": "^1.83.0"
+  }
+}
