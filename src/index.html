@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Основные настройки страницы -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Minimal daily planner" />
+
+  <!-- Подключение стилей и JavaScript -->
+  <link rel="stylesheet" href="./styles/main.scss" />
+  <script type="module" src="./scripts/main.js"></script>
+
+  <title>daily. — Daily Planner</title>
+</head>
+
+<body>
+  <!-- Главный контейнер приложения -->
+  <div class="app">
+
+    <!-- Шапка приложения -->
+    <header class="header">
+      <h1>daily.</h1>
+    </header>
+
+    <!-- Основная панель: боковая панель + расписание -->
+    <div class="dashboard">
+
+      <!-- Боковая панель -->
+      <aside class="sidebar">
+
+        <!-- Календарь -->
+        
+<section class="calendar">
+  <h2>Calendar</h2>
+
+  <div class="calendar-header">
+    <button id="prev-month" type="button">&lt;</button>
+    <span id="calendar-month">November 2026</span>
+    <button id="next-month" type="button">&gt;</button>
+  </div>
+
+  <div class="calendar-grid">
+    <span class="weekday">Mo</span>
+    <span class="weekday">Tu</span>
+    <span class="weekday">We</span>
+    <span class="weekday">Th</span>
+    <span class="weekday">Fr</span>
+    <span class="weekday">Sa</span>
+    <span class="weekday">Su</span>
+  </div>
+</section>
+
+
+        <!-- Список задач -->
+        <section class="tasks">
+
+          <!-- Заголовок и кнопка добавления -->
+          <div class="tasks-header">
+            <h2>Tasks</h2>
+            <button type="button" id="add-task-button">
+              + Add task
+            </button>
+          </div>
+
+          <!-- Список задач -->
+          <div class="tasks-progress">
+            <div class="tasks-progress-info">
+                <span id="tasks-count">0 tasks</span>
+                <span id="tasks-completed">0 completed</span>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+            </div>
+
+          <!-- Форма добавления и редактирования задачи -->
+          <form id="task-form" class="task-form" hidden novalidate>
+            <div id="task-error" class="form-error" role="alert" hidden></div>
+            <input
+              type="text"
+              id="task-title"
+              placeholder="Enter a task..."
+              maxlength="100"
+              required
+            />
+
+            <!-- Кнопки формы -->
+            <div class="task-form-actions">
+              <button type="submit" id="task-submit-button">
+                Add
+              </button>
+
+              <button type="button" id="task-cancel-button">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <!-- Сюда JavaScript будет добавлять задачи -->
+          <ul id="task-list"></ul>
+        </section>
+
+      </aside>
+      <!-- Конец боковой панели -->
+
+      <!-- Основная область расписания -->
+      <main class="content">
+        <section class="schedule">
+
+          <!-- Заголовок расписания и основные действия -->
+          <div class="schedule-header">
+            <div>
+              <p class="eyebrow">YOUR PLANNER</p>
+              <h2>Monday, November 23</h2>
+              <p class="schedule-subtitle">
+                Plan your day, one hour at a time.
+              </p>
+            </div>
+
+            <!-- Кнопки управления расписанием -->
+            <div class="schedule-actions">
+              <button class="today-button" type="button">
+                Today
+              </button>
+
+              <button class="add-event-button" type="button">
+                + Add event
+              </button>
+            </div>
+          </div>
+
+          <!-- Временная шкала: события создаются через JavaScript -->
+          <div class="timeline" id="timeline"></div>
+
+        </section>
+      </main>
+      <!-- Конец расписания -->
+
+    </div>
+    <!-- Конец dashboard -->
+
+  </div>
+  <!-- Конец главного контейнера приложения -->
+
+
+  <!-- Модальное окно создания и редактирования событий -->
+  <div class="modal-overlay" id="event-modal" hidden>
+    <div class="modal">
+
+      <!-- Заголовок модального окна -->
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">YOUR PLANNER</p>
+          <h2>New event</h2>
+        </div>
+
+        <button class="close-modal" type="button">
+          &times;
+        </button>
+      </div>
+
+      <!-- Форма события -->
+      <form id="event-form" novalidate>
+
+        <!-- Вывод ошибки -->
+        <div id="event-error" class="form-error" role="alert" hidden></div>
+
+        <!-- Название -->
+        <label for="event-title">Event name</label>
+        <input
+          type="text"
+          id="event-title"
+          placeholder="What are you planning?"
+          required
+        />
+
+        <!-- Дата -->
+        <label for="event-date">Date</label>
+        <input type="date" id="event-date" required />
+
+        <!-- Время начала и окончания -->
+        <div class="form-row">
+          <div>
+            <label for="event-start">Start time</label>
+            <input
+            type="time"
+            id="event-start"
+            min="06:00"
+            max="23:59"
+            required
+            />
+          </div>
+
+          <div>
+            <label for="event-end">End time</label>
+            <input
+            type="time"
+            id="event-end"
+            min="06:00"
+            max="23:59"
+            required
+            />
+          </div>
+        </div>
+
+        <!-- Категория события -->
+        <label for="event-category">Category</label>
+        <select id="event-category">
+          <option value="personal">Personal</option>
+          <option value="work">Work</option>
+          <option value="study">Study</option>
+          <option value="health">Health</option>
+        </select>
+
+        <!-- Дополнительное описание -->
+        <label for="event-description">Description</label>
+        <textarea
+          id="event-description"
+          placeholder="Additional details..."
+        ></textarea>
+
+        <!-- Кнопки сохранения и отмены -->
+        <div class="modal-actions">
+          <button type="button" class="cancel-button">
+            Cancel
+          </button>
+
+          <button type="submit" class="save-button">
+            Save event
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <!-- Конец модального окна -->
+
+  <!-- Модальное окно подтверждения удаления -->
+<div class="confirm-overlay" id="confirm-modal" hidden>
+  <div class="confirm-modal">
+    <div class="modal-header">
+      <div>
+        <p class="eyebrow">YOUR PLANNER</p>
+        <h2 id="confirm-title">Delete item?</h2>
+      </div>
+
+      <button
+        class="close-modal"
+        id="confirm-close"
+        type="button"
+      >
+        &times;
+      </button>
+    </div>
+
+    <p id="confirm-message" class="confirm-message">
+      Are you sure you want to delete this item?
+    </p>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="cancel-button"
+        id="confirm-cancel"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="delete-button"
+        id="confirm-delete"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Конец модального окна подтверждения удаления -->
+
+  <!-- Подключение основного JavaScript уже находится в head -->
+
+</body>
+</html>
