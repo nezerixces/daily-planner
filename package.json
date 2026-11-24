@@ -4,10 +4,13 @@
   "description": "Minimalist dark daily planner web application",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html --public-url /daily-planner/"
   },
   "devDependencies": {
+    "@parcel/packager-raw-url": "^2.16.4",
     "@parcel/transformer-sass": "^2.16.4",
+    "@parcel/transformer-webmanifest": "^2.16.4",
+    "http-server": "^14.1.1",
     "parcel": "^2.15.4",
     "sass": "^1.83.0"
   }

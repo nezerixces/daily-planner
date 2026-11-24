@@ -302,40 +302,6 @@ confirmModal.addEventListener('click', (event) => {
   }
 });
 
-// ==========================================
-// Уникальные функции для подтвержения удаления события или задачи
-// ==========================================
-
-function openConfirmModal(title, message, callback) {
-  confirmTitle.textContent = title;
-  confirmMessage.textContent = message;
-
-  confirmCallback = callback;
-
-  confirmModal.hidden = false;
-}
-
-function closeConfirmModal() {
-  confirmModal.hidden = true;
-  confirmCallback = null;
-}
-
-confirmDeleteButton.addEventListener('click', () => {
-  if (confirmCallback) {
-    confirmCallback();
-  }
-
-  closeConfirmModal();
-});
-
-confirmCancelButton.addEventListener('click', closeConfirmModal);
-confirmCloseButton.addEventListener('click', closeConfirmModal);
-
-confirmModal.addEventListener('click', (event) => {
-  if (event.target === confirmModal) {
-    closeConfirmModal();
-  }
-});
 
 // ==========================================
 // 7. СОХРАНЕНИЕ СОБЫТИЙ
@@ -651,3 +617,21 @@ nextMonthButton.addEventListener('click', () => {
 updateTimeline();
 updateTasks();
 renderCalendar();
+
+
+// ==========================================
+// 15. РЕГИСТРАЦИЯ Service Worker
+// ==========================================
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const serviceWorkerUrl = new URL(
+      './service-worker.js',
+      document.baseURI,
+    );
+
+    navigator.serviceWorker.register(serviceWorkerUrl)
+      .then(() => console.log('PWA is ready'))
+      .catch((error) => console.error('PWA error:', error));
+  });
+}
